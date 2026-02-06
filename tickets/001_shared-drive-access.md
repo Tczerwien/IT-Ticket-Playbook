@@ -2,7 +2,7 @@
 
 ## Symptom
 
-User reports: "I can't open `\\\\SERVER\\Share` — getting Access Denied or path not found."
+User reports: "I can't open `\\SERVER\Share` — getting Access Denied or path not found."
 
 ## Fast Triage Questions
 
@@ -15,82 +15,82 @@ Before touching anything, ask or check:
 
 ## Commands + Output Analysis
 
-### 1\. Check network configuration
+### 1. Check network configuration
 
 ```
 ipconfig /all
 ```
 
-!\[ipconfig output](../assets/ticket-001/01\_ipconfig.png)
+![ipconfig output](../assets/ticket-001/01_ipconfig.png)
 
 **What to look for:** Confirm the machine has a valid IP, a default gateway, and DNS servers assigned. If any are missing or show 169.254.x.x (APIPA), the machine isn't getting a proper network config.
 
-### 2\. Ping the server by name
+### 2. Ping the server by name
 
 ```
 ping ThomasDell-XPS15
 ```
 
-!\[ping by name](../assets/ticket-001/02\_ping\_name.png)
+![ping by name](../assets/ticket-001/02_ping_name.png)
 
 **What to look for:** Successful replies mean both name resolution and network connectivity are working. If this fails but ping by IP works, it's a DNS issue.
 
-### 3\. Ping by IP address
+### 3. Ping by IP address
 
 ```
 ping 127.0.0.1
 ```
 
-!\[ping by IP](../assets/ticket-001/03\_ping\_ip.png)
+![ping by IP](../assets/ticket-001/03_ping_ip.png)
 
 **What to look for:** If this works but ping by name fails, the problem is name resolution (DNS), not the network itself.
 
-### 4\. Test DNS resolution
+### 4. Test DNS resolution
 
 ```
 nslookup ThomasDell-XPS15
 ```
 
-!\[nslookup](../assets/ticket-001/04\_nslookup.png)
+![nslookup](../assets/ticket-001/04_nslookup.png)
 
 **What to look for:** If nslookup returns the correct IP, DNS is fine. If it fails, try `ipconfig /flushdns` to clear stale cache and retest.
 
-### 5\. Check existing drive mappings
+### 5. Check existing drive mappings
 
 ```
 net use
 ```
 
-!\[net use](../assets/ticket-001/05\_net\_use.png)
+![net use](../assets/ticket-001/05_net_use.png)
 
 **What to look for:** Stale or disconnected sessions to the same server. These can block new connections, especially if they used different credentials.
 
-### 6\. Attempt to connect to the share
+### 6. Attempt to connect to the share
 
 ```
-net use \\\\ThomasDell-XPS15\\TestShare
+net use \\ThomasDell-XPS15\TestShare
 ```
 
-!\[net use share](../assets/ticket-001/06\_net\_use\_share.png)
+![net use share](../assets/ticket-001/06_net_use_share.png)
 
 **What to look for:** "Command completed successfully" means access works. "Access denied" means permissions. "Network path not found" means connectivity or name issue.
 
-### 7\. Verify access
+### 7. Verify access
 
 ```
-dir \\\\ThomasDell-XPS15\\TestShare
+dir \\ThomasDell-XPS15\TestShare
 ```
 
-!\[dir verification](../assets/ticket-001/07\_dir\_verify.png)
+![dir verification](../assets/ticket-001/07_dir_verify.png)
 
 **What to look for:** You should see the files in the share listed. This confirms end-to-end access.
 
 ## Decision Tree
 
-* **Ping by IP works, ping by name fails** → DNS/name resolution issue. Run `ipconfig /flushdns` and retest with `nslookup`.
-* **Ping fails entirely** → Network issue. Check cable, Wi-Fi, VPN (Tailscale), or firewall.
-* **Connection works but "Access Denied"** → Permissions issue. Check share permissions vs NTFS permissions, or user may have stale cached credentials.
-* **Prompted for credentials repeatedly** → Cached credential conflict. Clear with `net use \\\\SERVER\\Share /delete` and reconnect.
+- **Ping by IP works, ping by name fails** → DNS/name resolution issue. Run `ipconfig /flushdns` and retest with `nslookup`.
+- **Ping fails entirely** → Network issue. Check cable, Wi-Fi, VPN (Tailscale), or firewall.
+- **Connection works but "Access Denied"** → Permissions issue. Check share permissions vs NTFS permissions, or user may have stale cached credentials.
+- **Prompted for credentials repeatedly** → Cached credential conflict. Clear with `net use \\SERVER\Share /delete` and reconnect.
 
 ## Fix Steps
 
@@ -99,8 +99,8 @@ Depending on the root cause:
 **If stale session:**
 
 ```
-net use \\\\SERVER\\Share /delete
-net use \\\\SERVER\\Share /user:DOMAIN\\username
+net use \\SERVER\Share /delete
+net use \\SERVER\Share /user:DOMAIN\username
 ```
 
 **If DNS issue:**
@@ -112,14 +112,13 @@ nslookup SERVERNAME
 
 **If VPN/Tailscale not connected:**
 
-* Verify Tailscale is running and connected
-* Confirm the server's Tailscale IP is reachable
+- Verify Tailscale is running and connected
+- Confirm the server's Tailscale IP is reachable
 
 ## Verification
 
 After applying the fix:
 
-1. Run `dir \\\\SERVER\\Share` and confirm files are listed.
+1. Run `dir \\SERVER\Share` and confirm files are listed.
 2. Have the user open the path in File Explorer.
 3. Document what the root cause was and what fixed it.
-
