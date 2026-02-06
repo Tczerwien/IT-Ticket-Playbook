@@ -21,7 +21,7 @@ Before touching anything, ask or check:
 ipconfig /all
 ```
 
-!\[ipconfig output](../../assets/ticket-001/01\_ipconfig.png)
+!\[ipconfig output](../assets/ticket-001/01\_ipconfig.png)
 
 **What to look for:** Confirm the machine has a valid IP, a default gateway, and DNS servers assigned. If any are missing or show 169.254.x.x (APIPA), the machine isn't getting a proper network config.
 
@@ -31,7 +31,7 @@ ipconfig /all
 ping ThomasDell-XPS15
 ```
 
-!\[ping by name](../../assets/ticket-001/02\_ping\_name.png)
+!\[ping by name](../assets/ticket-001/02\_ping\_name.png)
 
 **What to look for:** Successful replies mean both name resolution and network connectivity are working. If this fails but ping by IP works, it's a DNS issue.
 
@@ -41,7 +41,7 @@ ping ThomasDell-XPS15
 ping 127.0.0.1
 ```
 
-!\[ping by IP](../../assets/ticket-001/03\_ping\_ip.png)
+!\[ping by IP](../assets/ticket-001/03\_ping\_ip.png)
 
 **What to look for:** If this works but ping by name fails, the problem is name resolution (DNS), not the network itself.
 
@@ -51,7 +51,7 @@ ping 127.0.0.1
 nslookup ThomasDell-XPS15
 ```
 
-!\[nslookup](../../assets/ticket-001/04\_nslookup.png)
+!\[nslookup](../assets/ticket-001/04\_nslookup.png)
 
 **What to look for:** If nslookup returns the correct IP, DNS is fine. If it fails, try `ipconfig /flushdns` to clear stale cache and retest.
 
@@ -61,7 +61,7 @@ nslookup ThomasDell-XPS15
 net use
 ```
 
-!\[net use](../../assets/ticket-001/05\_net\_use.png)
+!\[net use](../assets/ticket-001/05\_net\_use.png)
 
 **What to look for:** Stale or disconnected sessions to the same server. These can block new connections, especially if they used different credentials.
 
@@ -71,7 +71,7 @@ net use
 net use \\\\ThomasDell-XPS15\\TestShare
 ```
 
-!\[net use share](../../assets/ticket-001/06\_net\_use\_share.png)
+!\[net use share](../assets/ticket-001/06\_net\_use\_share.png)
 
 **What to look for:** "Command completed successfully" means access works. "Access denied" means permissions. "Network path not found" means connectivity or name issue.
 
@@ -81,7 +81,7 @@ net use \\\\ThomasDell-XPS15\\TestShare
 dir \\\\ThomasDell-XPS15\\TestShare
 ```
 
-!\[dir verification](../../assets/ticket-001/07\_dir\_verify.png)
+!\[dir verification](../assets/ticket-001/07\_dir\_verify.png)
 
 **What to look for:** You should see the files in the share listed. This confirms end-to-end access.
 
